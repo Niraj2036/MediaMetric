@@ -6,7 +6,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Star Admin2 </title>
+  <title>MediaMetric | DASHBOARD</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../static/vendors/feather/feather.css">
   <link rel="stylesheet" href="../static/vendors/mdi/css/materialdesignicons.min.css">
@@ -23,13 +23,57 @@
   <link rel="stylesheet" href="../static/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../static/../static/images/favicon.png" />
+  <style>
+    .cht-with-ai{
+      font-weight: 700;
+  background-color: white; 
+  border: 3px solid #5e9693;
+  color:#5e9693;
+  transition: 0.3s ease-in-out;
+}
+.cht-with-ai:hover{
+  background-color: #5e9693; 
+  color:white;
+}
+
+  </style>
 </head>
 <body>
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
-    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row" style="background-color: white;">
-    
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top mask-custom shadow-0">
+      <div class="container">
+        <a class="navbar-brand" href="#!"><span style="color: #5e9693; font-weight: 800;">Media</span><span style="color: #787878; font-weight: 800;">Metric</span></a>
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+          data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div>
+          <input type="button" value="Chat with AI" onclick="showPopup()" class="btn py-2 fs-5 cht-with-ai" >
+        </div>  
+      </div>
     </nav>
+
+
+    <div class="ai-chat" id="popup" style="display: none;">
+      <div class="chat-box">
+        <div class="chat-box-header">
+          <div></div>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="chat-box-body">
+          <!-- Chat messages will go here -->
+        </div>
+        <div class="chat-box-footer">
+          <input type="text" class="chat-box-input" placeholder="Type a message...">
+          <button class="chat-box-send">Send</button>
+        </div>
+      </div>
+    </div>
+
+
+
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:partials/_settings-panel.html -->
@@ -38,17 +82,17 @@
         <div id="theme-settings" class="settings-panel">
           <i class="settings-close ti-close"></i>
           <p class="settings-heading">SIDEBAR SKINS</p>
-          <div class="sidebar-bg-options selected" id="sidebar-light-theme"><div class="img-ss rounded-circle bg-light border me-3"></div>Light</div>
-          <div class="sidebar-bg-options" id="sidebar-dark-theme"><div class="img-ss rounded-circle bg-dark border me-3"></div>Dark</div>
-          <p class="settings-heading mt-2">HEADER SKINS</p>
-          <div class="color-tiles mx-0 px-4">
-            <div class="tiles success"></div>
-            <div class="tiles warning"></div>
-            <div class="tiles danger"></div>
-            <div class="tiles info"></div>
-            <div class="tiles dark"></div>
-            <div class="tiles default"></div>
+
+          <div style="height: 80%; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="chat-box-body">
+              <!-- Chat messages will go here -->
+            </div>
+            <div class="chat-box-footer">
+              <input type="text" class="chat-box-input side-chat" placeholder="Type a message...">
+              <button class="chat-box-send">Send</button>
+            </div>
           </div>
+          
         </div>
       </div>
       
@@ -165,8 +209,7 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2024. All rights reserved.</span>
           </div>
         </footer>
         <!-- partial -->
@@ -198,6 +241,76 @@
   <script src="../static/js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
 </body>
+  <script>
 
+$(document).ready(function () {
+    // Handle send button click
+    $(".chat-box-send").click(function () {
+        message = $(".chat-box-input").val();
+        if (!message) {
+            message = $(".chat-box-input.side-chat").val();
+            if (!message)
+            {
+            return;
+            }
+        }
+
+        // Append user message to chat-box-body
+        $(".chat-box-body").append(`<p><strong>You:</strong> ${message}</p>`);
+
+        // Clear the input field
+        $(".chat-box-input").val("");
+
+        // Show "thinking..." text
+        $(".chat-box-body").append(`<p class="thinking"><em>Bot is thinking...</em></p>`);
+        $(".chat-box-body").scrollTop($(".chat-box-body")[0].scrollHeight); // Scroll to bottom
+
+        // Send the message to the backend
+        $.ajax({
+            url: "/chatbot/",
+            method: "POST",
+            data: { message: message },
+            success: function (response) {
+                // Remove "thinking..." text
+                $(".chat-box-body .thinking").remove();
+
+                // Append bot response to chat-box-body
+                $(".chat-box-body").append(`<p><strong>Bot:</strong> ${response.response}</p>`);
+                $(".chat-box-body").scrollTop($(".chat-box-body")[0].scrollHeight); // Scroll to bottom
+            },
+            error: function (xhr) {
+                // Remove "thinking..." text
+                $(".chat-box-body .thinking").remove();
+
+                // Display error message
+                $(".chat-box-body").append(`<p><strong>Bot:</strong> Error: ${xhr.responseJSON?.error || "Something went wrong."}</p>`);
+                $(".chat-box-body").scrollTop($(".chat-box-body")[0].scrollHeight); // Scroll to bottom
+            }
+        });
+    });
+
+    // Allow sending messages with Enter key
+    $(".chat-box-input").keypress(function (e) {
+        if (e.which == 13) {
+            $(".chat-box-send").click();
+        }
+    });
+
+    // Handle close button click to hide chat
+    $(".close-btn").click(function () {
+        $("#popup").hide();
+    });
+});
+
+
+    function showPopup() {
+  document.getElementById("popup").style.display = "flex"; // Or "grid" for Grid method
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+  </script>
 </html>
 

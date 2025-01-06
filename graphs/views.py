@@ -54,13 +54,13 @@ def plot_graphs(request):
         hovermode='x',
     )
     fig1.update_traces(
-        line=dict(color='orange', width=2),
+        line=dict(color='#5e9693', width=2),
         mode='lines+markers',
         marker=dict(
             symbol='circle',
             color='white',
             size=10,
-            line=dict(color='orange', width=2)
+            line=dict(color='#5e9693', width=2)
         ),
         hovertemplate='Day: %{x}<br>Impressions: %{y}<br>' +
                       f'Average Likes: {avg_likes}<br>' +
@@ -109,13 +109,13 @@ def plot_graphs(request):
         hovermode='x',
     )
     fig2.update_traces(
-        line=dict(color='blue', width=2),
+        line=dict(color='#5e9693', width=2),
         mode='lines+markers',
         marker=dict(
             symbol='circle',
             color='white',
             size=10,
-            line=dict(color='blue', width=2)
+            line=dict(color='green', width=2)
         ),
         hovertemplate='Hour: %{x}<br>Impressions: %{y}<br>' +
                       f'Average Likes: {avg_likes}<br>' +
@@ -146,21 +146,21 @@ def plot_graphs(request):
         xaxis=dict(
             showgrid=False,
             zeroline=True,
-            zerolinecolor='black',
+            zerolinecolor='#5e9693',
             zerolinewidth=2,
             fixedrange=True,
         ),
         yaxis=dict(
             showgrid=True,
             zeroline=True,
-            zerolinecolor='black',
+            zerolinecolor='#5e9693',
             zerolinewidth=2,
             fixedrange=True,
         ),
         bargap=0.3,
     )
     fig3.update_traces(
-        marker=dict(color='purple', line=dict(color='purple', width=1)),
+        marker=dict(color='#5e9693', line=dict(color='#5e9693', width=1)),
         hovertemplate='Type: %{x}<br>Engagement Rate: %{y:.2f}<extra></extra>'
     )
 
@@ -244,7 +244,7 @@ def plot_graphs(request):
         values='count',
         names='type',
         title='Distribution of Posts by Type',
-        color_discrete_sequence=px.colors.sequential.RdBu  # Adjust color palette as desired
+        color_discrete_sequence=px.colors.sequential.Greens  # Adjust color palette as desired
     )
 
     # Customizing the Pie Chart

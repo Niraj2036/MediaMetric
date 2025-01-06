@@ -54,7 +54,7 @@ ROOT_URLCONF = "graphs.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["D:/Hackathons/level-supermind/prehackathon/graphs/templetes"],
+        "DIRS": ["templetes"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
