@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-oyj!w12s+wf&2k#6re41_^!5f1!wd9^&a%mv*)%ub@8xj+1l7k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://mediametric.onrender.com"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
