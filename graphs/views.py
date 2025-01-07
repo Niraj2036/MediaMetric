@@ -32,7 +32,23 @@ def plot_graphs(request):
 
     # 1. Line graph: Day vs Average Impressions
     avg_impressions_day = df.groupby('day')['impressions'].mean().reset_index()
-    fig1 = px.line(avg_impressions_day, x='day', y='impressions', title='Average Impressions by Day')
+    # Ensure 'day' is in the correct order
+    day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    df['day'] = pd.Categorical(df['day'], categories=day_order, ordered=True)
+    
+    # 1. Line graph: Day vs Average Impressions
+    avg_metrics_day = df.groupby('day').agg({
+        'impressions': 'mean',
+        'likes': 'mean',
+        'shares': 'mean',
+        'comments': 'mean',
+        'engagement rate': 'mean'
+    }).reset_index()
+
+    # Convert impressions, likes, shares, and comments to integers
+    avg_metrics_day[['impressions', 'likes', 'shares', 'comments']] = avg_metrics_day[['impressions', 'likes', 'shares', 'comments']].astype(int)
+
+    fig1 = px.line(avg_metrics_day, x='day', y='impressions', title='Average Impressions by Day')
 
     # Customizing Graph 1
     fig1.update_layout(
@@ -63,11 +79,12 @@ def plot_graphs(request):
             line=dict(color='#5e9693', width=2)
         ),
         hovertemplate='Day: %{x}<br>Impressions: %{y}<br>' +
-                      f'Average Likes: {avg_likes}<br>' +
-                      f'Average Shares: {avg_shares}<br>' +
-                      f'Average Comments: {avg_comments}<br>' +
-                      f'Average Engagement Rate: {avg_engagement_rate}<extra></extra>'
+                      'Average Likes: %{customdata[0]}<br>' +
+                      'Average Shares: %{customdata[1]}<br>' +
+                      'Average Comments: %{customdata[2]}<br>' +
+                      'Average Engagement Rate: %{customdata[3]:.2f}<extra></extra>'
     )
+    fig1.update_traces(customdata=avg_metrics_day[['likes', 'shares', 'comments', 'engagement rate']].values)
 
     # Add a moving vertical dotted line
     fig1.add_shape(
@@ -83,8 +100,18 @@ def plot_graphs(request):
 
     # 2. Line graph: Time vs Average Impressions (Hourly)
     df['Hour'] = pd.to_datetime(df['time'], format='%H:%M:%S').dt.hour
-    avg_impressions_hour = df.groupby('Hour')['impressions'].mean().reset_index()
-    fig2 = px.line(avg_impressions_hour, x='Hour', y='impressions', title='Average Impressions by Hour')
+    avg_metrics_hour = df.groupby('Hour').agg({
+        'impressions': 'mean',
+        'likes': 'mean',
+        'shares': 'mean',
+        'comments': 'mean',
+        'engagement rate': 'mean'
+    }).reset_index()
+
+    # Convert impressions, likes, shares, and comments to integers
+    avg_metrics_hour[['impressions', 'likes', 'shares', 'comments']] = avg_metrics_hour[['impressions', 'likes', 'shares', 'comments']].astype(int)
+
+    fig2 = px.line(avg_metrics_hour, x='Hour', y='impressions', title='Average Impressions by Hour')
 
     # Customizing Graph 2
     fig2.update_layout(
@@ -118,11 +145,12 @@ def plot_graphs(request):
             line=dict(color='green', width=2)
         ),
         hovertemplate='Hour: %{x}<br>Impressions: %{y}<br>' +
-                      f'Average Likes: {avg_likes}<br>' +
-                      f'Average Shares: {avg_shares}<br>' +
-                      f'Average Comments: {avg_comments}<br>' +
-                      f'Average Engagement Rate: {avg_engagement_rate}<extra></extra>'
+                      'Average Likes: %{customdata[0]}<br>' +
+                      'Average Shares: %{customdata[1]}<br>' +
+                      'Average Comments: %{customdata[2]}<br>' +
+                      'Average Engagement Rate: %{customdata[3]:.2f}<extra></extra>'
     )
+    fig2.update_traces(customdata=avg_metrics_hour[['likes', 'shares', 'comments', 'engagement rate']].values)
 
     # Add a moving vertical dotted line
     fig2.add_shape(
@@ -135,7 +163,6 @@ def plot_graphs(request):
         yref='paper',
         line=dict(color='gray', width=1, dash='dot'),
     )
-
     # 3. Bar graph: Post Type vs Engagement Rate
     avg_engagement_rate = df.groupby('type')['engagement rate'].mean().reset_index()
     fig3 = px.bar(avg_engagement_rate, x='type', y='engagement rate', title='Engagement Rate by Post Type')

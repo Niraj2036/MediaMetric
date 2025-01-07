@@ -19099,12 +19099,6 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
   animation-name: fadeOut;
 }
 
-.infinite-spin, #settings-trigger i {
-  animation-name: spin;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
 
 @keyframes spin {
   from {
