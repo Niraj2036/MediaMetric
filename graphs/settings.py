@@ -123,6 +123,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),  # Assuming the folder is at the root of your project
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
