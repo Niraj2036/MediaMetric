@@ -54,7 +54,7 @@ ROOT_URLCONF = "graphs.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["templetes"],
+        "DIRS": [BASE_DIR/"templetes"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
